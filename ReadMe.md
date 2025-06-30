@@ -74,11 +74,11 @@ python -m scripts.sample_diffusion_no_pocket ../config/sampling/SMG/sample_diff_
 Please use the command below to test the trained diffusion model for pocket-conditioned molecule generation:
 
 ```
-python -m scripts.sample_diffusion_with_pocket ../config/sampling/PMG/sample_diff_pos0_10_pos1.e-7_0.01_6_v001_scalar128_vec32_layer8_with_pocket_guidance_with_shape_guidance.yml --data_id <index of molecule> --result_path ./result/with_guide/
+python -m scripts.sample_diffusion_with_pocket ../config/sampling/PMG/sample_diff_pos0_10_pos1.e-7_0.01_6_v001_scalar128_vec32_layer8_with_pocket_guidance_with_shape_guidance.yml --data_id <index of molecule> --result_path ./result/pocket_with_guide/
 ```
 
 ```
-python -m scripts.sample_diffusion_with_pocket ../config/sampling/PMG/sample_diff_pos0_10_pos1.e-7_0.01_6_v001_scalar128_vec32_layer8_with_pocket_guidance_no_shape_guidance.yml --data_id <index of molecule> --result_path ./result/without_guide/
+python -m scripts.sample_diffusion_with_pocket ../config/sampling/PMG/sample_diff_pos0_10_pos1.e-7_0.01_6_v001_scalar128_vec32_layer8_with_pocket_guidance_no_shape_guidance.yml --data_id <index of molecule> --result_path ./result/pocket_without_guide/
 ```
 
 Here, "data_id" denotes the index of molecules. Please note that lmdb, which we used to save processed dataset, uses string order of indices to reindex the molecules. Please check "index_map.txt" in data directory to find the mapping between the value of data_id and its corresponding index in the test dataset.
@@ -86,3 +86,22 @@ Here, "data_id" denotes the index of molecules. Please note that lmdb, which we 
 ### Results
 
 We provided our results for PMG and SMG reported in the paper at the link https://zenodo.org/records/14855728. The results can be loaded with torch.load("filename") function. 
+
+### Evaluation
+
+We provided code to evaluate the quality of generated molecules.
+
+For pocket-conditioned molecule generation:
+```
+python -m scripts.evaluate_new_dock_shapemol ./result/pocket_with_guide/ --docking_mode vina_dock --protein_root <test protein data path>
+```
+
+To evaluate the docking quality, please download the test data provided by TargetDiff (https://github.com/guanjq/targetdiff) into the test protein data path. Please note that docking is a very time-consuming task, so we also provide the option to evaluate all the generated molecules for each single pocket by adding the option "--eval_id <id>". Since the latest versions of some dependency packages, such as meeko, are not compatible to the evaluation code, please download the required package based on the provided version in the environment file.
+
+For shape-conditioned molecule generation:
+```
+python -m scripts.evaluate_diffusion_sim ./result/with_guide/ ./data/MOSES2/MOSES2_test_mol.pkl
+```
+
+
+

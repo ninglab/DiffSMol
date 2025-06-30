@@ -304,6 +304,8 @@ if __name__ == '__main__':
         'complete_mol_2ddivs': complete_mol_2ddivs,
     }, os.path.join(result_path, f'metrics_{args.eval_step}_{args.basic_mode}.pt'))
     """
+    get_ref_similarity_shaep((complete_mols, cond_mol))
+
     complete_mol_2ddivs = []
     with Pool(processes=args.num_workers) as pool:
         func = get_ref_similarity_shaep if args.shape_sim_type == 'shaep' or (not IF_LOAD_ROCS) else get_ref_similarity_rocs

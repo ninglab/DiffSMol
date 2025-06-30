@@ -18,8 +18,8 @@ def shape_align(reference, query, shaep_path = '../../software', remove_files = 
     
     job_number = random.randint(0, 10000000)
     
-    rdkit.Chem.rdmolfiles.MolToV3KMolFile(reference, f'shaep_objects_temp/mol_ref_shaep_{ID}_{job_number}.mol')
-    rdkit.Chem.rdmolfiles.MolToV3KMolFile(query, f'shaep_objects_temp/mol_query_shaep_{ID}_{job_number}.mol')
+    Chem.MolToMolFile(reference, f'shaep_objects_temp/mol_ref_shaep_{ID}_{job_number}.mol')
+    Chem.MolToMolFile(query, f'shaep_objects_temp/mol_query_shaep_{ID}_{job_number}.mol')
     
     os.system(f"{shaep_path}/shaep --onlyshape -q shaep_objects_temp/mol_ref_shaep_{ID}_{job_number}.mol shaep_objects_temp/mol_query_shaep_{ID}_{job_number}.mol -s shaep_objects_temp/query_mol_shaep_{ID}_{job_number}.sdf shaep_objects_temp/shapesimilarity_shaep_{ID}_{job_number}.txt >/dev/null 2>&1")
 
@@ -34,15 +34,15 @@ def shape_align(reference, query, shaep_path = '../../software', remove_files = 
     return mol, float(mol.GetProp('Similarity_shape')), rocs.item()
 
 
-def ESP_shape_align(reference, query, shaep_path = '../software', temp_path = '/fs/scratch/PCON0041/Ziqi/logs_diffusion_full/', remove_files = True, ID = ''):
+def ESP_shape_align(reference, query, shaep_path = '../software', temp_path = '../temp/', remove_files = True, ID = ''):
     
     if not os.path.exists(temp_path+'shaep_objects_temp'):
         os.makedirs(temp_path+'shaep_objects_temp')
     
     job_number = random.randint(0, 10000000)
     
-    rdkit.Chem.rdmolfiles.MolToV3KMolFile(reference, f'{temp_path}shaep_objects_temp/mol_ref_shaep_{ID}_{job_number}.mol')
-    rdkit.Chem.rdmolfiles.MolToV3KMolFile(query, f'{temp_path}shaep_objects_temp/mol_query_shaep_{ID}_{job_number}.mol')
+    Chem.MolToMolFile(reference, f'{temp_path}shaep_objects_temp/mol_ref_shaep_{ID}_{job_number}.mol')
+    Chem.MolToMolFile(query, f'{temp_path}shaep_objects_temp/mol_query_shaep_{ID}_{job_number}.mol')
     
     os.system(f"{shaep_path}/shaep -q {temp_path}shaep_objects_temp/mol_ref_shaep_{ID}_{job_number}.mol {temp_path}shaep_objects_temp/mol_query_shaep_{ID}_{job_number}.mol -s {temp_path}shaep_objects_temp/query_mol_shaep_{ID}_{job_number}.sdf {temp_path}shaep_objects_temp/shapesimilarity_shaep_{ID}_{job_number}.txt >/dev/null 2>&1")
     
