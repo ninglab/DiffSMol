@@ -242,7 +242,6 @@ def get_mesh(mol, center_pos=False, confId=-1, scaling=1.0, probe_radius=1.4):
 
     oddtconf = Chem.MolToMolBlock(mol, confId=confId)
     oddtconftool = toolkit.readstring('sdf', oddtconf)
-    oddtconftool.calccharges()
     verts, faces = oddt.surface.generate_surface_marching_cubes(oddtconftool, scaling=scaling, probe_radius=probe_radius)
     return verts, faces
 
